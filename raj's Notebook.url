@@ -1,2 +1,228 @@
-﻿[InternetShortcut]
-URL=https://onedrive.live.com/redir.aspx?cid=b60e553aa1372fda&resid=B60E553AA1372FDA!302&type=3
+
+/*Banking Management System*/
+
+import java.util.Scanner;
+
+ class User
+{
+	private String AccNo;
+	private String Pin;
+	private double balance;
+	private int attempt;
+	
+	// constructor for assigning values of new user
+	public User(String AccNo, String Pin, double balance, int attempt)
+	{
+		super();
+		this.AccNo = AccNo;
+		this.Pin = Pin;
+		this.balance = balance;
+		this.attempt = attempt;
+		
+	}
+	
+	public String getAccNo()
+	{
+		return AccNo;
+	}
+	
+	public String getPin()
+	{
+		return Pin;
+	}
+	
+	public int getAttempt()
+	{
+		return attempt;
+	}
+	
+	// update the number of times a user request to bank for a transaction 
+	public void setattempt(int attempt)
+	{
+		this.attempt = attempt;
+	}
+	
+	public void setPin(String Pin)
+	{
+		this.Pin = Pin;
+	}
+	
+	//
+	public double getbal()
+	{
+		return balance;
+	}
+	
+	//update the new balance to account
+	public void setbal(double balance)
+	{
+		this.balance = balance;
+	}
+}
+
+ // a new class for the newly added user
+class Detail
+{
+	private User u1;
+	Boolean access = false;
+	
+	public Detail(User user)
+	{
+		this.u1 = user;
+	}
+	
+	// displaying the balance in the user account
+	public void displaybal()
+	{
+		if(access = true)
+		{
+			System.out.println("Balance : Rs." + u1.getbal());
+		}
+	}
+	
+	// showing the existing user login via acctNo and Pin and get access to balance
+	// and displaying the number of attempts of a user try to login
+	public void accessAcc(String acctNo, String PIN)
+	{
+		if(u1.getAccNo().equals(acctNo) && u1.getPin().equals(PIN))
+		{
+			System.out.println("Happy to See you again");
+			System.out.println("Account Balance is : Rs." + u1.getbal());
+		}
+		else
+		{
+			if(u1.getAccNo().equals(acctNo)!=u1.getPin().equals(PIN))
+			{
+				u1.setattempt(u1.getAttempt()+1);
+				System.out.println("Invalid User accunt number and Pin ");
+				System.out.println("Attempt : " + u1.getAttempt());
+				
+			
+			if(u1.getAttempt()>=3)
+			{
+				System.out.println("You have exceeded the limit.Please try after 24hrs.");
+				System.out.println("Contact your Bank for futher queries");
+			}
+		   }
+		}
+	 }
+	
+	// amount is withdrawn from the user account and displayed the updated balance
+	public void WithdrawAmount(int amm)
+	{
+		
+			if(amm>0 && u1.getbal()>= amm)
+			{
+				
+				System.out.println("Transcation Completed");
+				u1.setbal(u1.getbal()-amm);
+				System.out.println("Updated balance is : Rs." + u1.getbal());
+			}
+		
+		else
+		{
+			
+			
+				System.out.println("Transcation Failed.Enter a valid ammount to withdraw");
+			
+		}
+	}
+	}
+
+// give a valid amount is deposited in the created user account
+ class DepositToBank extends Detail
+{
+	private User u1;
+	//private double balance;
+	
+	public DepositToBank(User user)
+	{
+		super(user);
+		this.u1 = user;
+		//this.balance = balance;
+	}
+	
+	public void depositAmm(int amm)
+	{
+		if(amm>0 )
+		{
+			u1.setbal(u1.getbal() + amm);
+			System.out.println("Ammount is deposited and Updated balance is: Rs."+u1.getbal());
+		}
+		else
+		{
+			System.out.println("Transcation Error. Please try again.");
+		}
+	}
+}
+
+public class ATM
+{
+	public static void main(String[] args) 
+  {
+		Scanner s = new Scanner(System.in);
+		String a1,a2;                    // a1 = acctNo and a2 = Pin no.
+		double b=100;                // initial bank account balance is Rs.100
+		int choice,var;               // variable used in switch
+	   
+                do 
+                {
+				System.out.println("Bank options via ATM Machine");
+				System.out.println(" 1. create Account");
+				System.out.println(" 2. EXIT");
+				System.out.println("Choose one");
+				choice = s.nextInt();
+				
+				switch(choice)
+				{
+				case 1:
+					System.out.print("Enter account no.");
+					a1 = s.next();
+					System.out.println("Enter your PIN");
+					a2 = s.next();
+					User u1 = new User(a1,a2,b,0);
+					Detail D1 = new Detail(u1);
+					DepositToBank D2 = new DepositToBank(u1);
+					do
+          {
+					System.out.println("1.For Balance");
+					System.out.println("2.For Deposit");
+					System.out.println("3.For Withdraw");
+					System.out.println("4.EXIT");
+					System.out.println("Enter the choice : ");
+					var = s.nextInt();
+					switch(var)
+					{
+					case 1: System.out.println("Balance = Rs." + u1.getbal());
+					         break;
+					         
+					case 2: System.out.println("Enter the amount you want to deposit: ");
+					         int c;
+					         c = s.nextInt();
+						    D2.depositAmm(c);
+						    break;
+					case 3: System.out.println("Enter amount you want to withdraw :");
+					        int z;
+					        z = s.nextInt();
+					        D1.WithdrawAmount(z);
+					        break;
+					
+					case 4: System.exit(0);
+					         break;
+					default : System.out.println("Enter the correct input");
+					          
+					}
+				} 
+        while(choice< '1'|| choice > '4');
+					
+				
+				case 2: System.exit(0);
+				         break;
+				default : System.out.println("Enter the correct input");
+			}
+	}
+  while(choice< '1'|| choice > '2');
+	}
+
+}
+
